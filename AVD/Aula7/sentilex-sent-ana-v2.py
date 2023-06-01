@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import re
+import csv
 POL = {}
 
 def carrega_sentilex():
@@ -45,11 +46,11 @@ def sentimento(frase):
 
 carrega_sentilex()
 
-txt = open("harry_potter_pedra_filosofal.txt").read()
+txt = open("Camilo-A_mulher_fatal.md").read()
 ptotalpos, qp,ptotalneg,qn,np= sentimento(txt)
 Factor = ptotalpos / ptotalneg
 #print( len(txt), ptotalpos,qp,pt,ptotalneg,qn,np,sep=",")
-listacap = re.split(r"#", txt)
+listacap = re.split(r"##", txt)
 
 print("Cap,Nº carateres, totpos, quanpos, totneg, quanneg,palavras,rationeg")
 n=0 
@@ -57,3 +58,18 @@ for cap in listacap:
     ptotalpos, qp,ptotalneg,qn,np= sentimento(cap)
     print( n,len(cap), ptotalpos,qp,ptotalneg,qn,np,Factor,sep =",")
     n=n+1
+
+
+saida = "A _mulher_fatal_sent.csv"
+
+with open(saida, "w", newline="", encoding="utf-8") as arquivo_csv:
+    writer = csv.writer(arquivo_csv)
+    writer.writerow(["Cap", "Nº carateres", "totpos", "quanpos", "totneg", "quanneg", "palavras", "rationeg"])
+    
+    n = 0
+    for cap in listacap:
+        ptotalpos, qp, ptotalneg, qn, np = sentimento(cap)
+        writer.writerow([n, len(cap), ptotalpos, qp, ptotalneg, qn, np, Factor])
+        n += 1
+
+print(saida)
